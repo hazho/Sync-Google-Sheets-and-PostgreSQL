@@ -7,7 +7,7 @@ kanal-service
 
 Необходимо установить requirements.txt
 
-И заполнить файл config.py данными о пользователе и базе данных в PostgreSL
+И заполнить файл config.py данными о пользователе и базе данных в PostgreSQL
 
 Запуск возможен в трех режимах:
 1. `python script.py`
