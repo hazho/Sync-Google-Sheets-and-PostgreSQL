@@ -79,7 +79,7 @@ class DataBaseManager:
             self._sql_execute(cursor, f'DELETE FROM {self.TABLE_NAME};')
 
     def delete_values(self, rows: set):
-        """Удаление строк начиная с заданной"""
+        """Удаление строк по их номерам"""
         if not rows: return
 
         with self.connection.cursor() as cursor:
