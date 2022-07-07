@@ -5,6 +5,7 @@ import psycopg2.extras
 class DataBaseManager:
     """Взаимодействует с базой PosgreSQL"""
     TABLE_NAME = 'orders'
+    NUMS_COLUMNS = 4
 
     def __init__(self, dbname, user, password, host, table_name=None):
         self.dbname = dbname
@@ -18,11 +19,9 @@ class DataBaseManager:
     def create_table(self):
         """Создание таблицы"""
         CREATE_TABLE = f"""CREATE TABLE {self.TABLE_NAME}(
-                        id serial PRIMARY KEY,
                         number_row int,
                         order_number varchar(10),
                         price_usd varchar(10),
-                        price_rub varchar(15),
                         delivery_date varchar(10));"""
 
         with self.connection.cursor() as cursor:
@@ -45,11 +44,11 @@ class DataBaseManager:
 
         # Дополнение данных если не соответствует кол-ву столбцов в таблице
         for value in values:
-            for _ in range(5 - len(value)):
+            for _ in range(self.NUMS_COLUMNS - len(value)):
                 value.append(None)
 
         with self.connection.cursor() as cursor:
-            query = f"INSERT INTO {self.TABLE_NAME}(number_row, order_number, price_usd, price_rub, delivery_date) VALUES %s"
+            query = f"INSERT INTO {self.TABLE_NAME}(number_row, order_number, price_usd, delivery_date) VALUES %s"
             self._sql_multy_execute(cursor, query, values)
 
     def update_values(self, values: list):
@@ -57,7 +56,7 @@ class DataBaseManager:
         if not values: return
         # Дополнение данных если не соответствует кол-ву столбцов в таблице
         for value in values:
-            for _ in range(5 - len(value)):
+            for _ in range(self.NUMS_COLUMNS - len(value)):
                 value.append(None)
             # Приведение колонки № к типу int
             value[0] = int(value[0])
@@ -67,9 +66,8 @@ class DataBaseManager:
                         SET number_row = data.number_row,
                             order_number = data.order_number, 
                             price_usd = data.price_usd, 
-                            price_rub = data.price_rub, 
                             delivery_date= data.delivery_date
-                        FROM (VALUES %s) AS data (number_row, order_number, price_usd, price_rub, delivery_date)
+                        FROM (VALUES %s) AS data (number_row, order_number, price_usd, delivery_date)
                         WHERE {self.TABLE_NAME}.number_row = data.number_row"""
             self._sql_multy_execute(cursor, query, values)
 
@@ -90,11 +88,12 @@ class DataBaseManager:
         """Возвращает содержимое таблицы TABLE_NAME"""
         with self.connection.cursor() as cursor:
             if self._is_table_exists(cursor):
-                query = f"SELECT number_row,order_number, price_usd, price_rub,delivery_date FROM {self.TABLE_NAME} ORDER BY number_row"
+                query = f"SELECT number_row, order_number, price_usd, delivery_date FROM {self.TABLE_NAME} ORDER BY number_row"
                 self._sql_execute(cursor, query)
                 return cursor.fetchall()
             else:
                 print(f'[ERROR] Таблицы {self.TABLE_NAME} нет существует.')
+                self._close_connection()
                 exit(1)
 
     def _get_connection(self):
