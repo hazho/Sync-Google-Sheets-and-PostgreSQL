@@ -130,3 +130,7 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+# Google private key
+services/credentials.json
+credentials.json
