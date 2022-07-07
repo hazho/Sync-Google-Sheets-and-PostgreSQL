@@ -27,9 +27,3 @@ def get_values_from_sheet(service_account_file: str, spreadsheet_id: str, range_
         print('[ERROR] Ошибка доступа к Google Sheets:', err)
         exit(1)
 
-
-if __name__ == '__main__':
-    SERVICE_ACCOUNT_FILE = 'credentials.json'
-    SAMPLE_SPREADSHEET_ID = '1fnRF8pPsQkJ8JLYrDJXtoOrV0NNub82yygvABIJEk68'
-    SAMPLE_RANGE_NAME = 'Лист1!A1:D'
-    print(get_values_from_sheet(SERVICE_ACCOUNT_FILE, SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME))
