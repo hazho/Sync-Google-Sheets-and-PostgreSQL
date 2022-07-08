@@ -1,13 +1,24 @@
-# kanal-service
-kanal-service
+# Sync-Google-Sheets-and-PostgreSQL
 
-Ссылка на Google Sheets документ: https://docs.google.com/spreadsheets/d/1fnRF8pPsQkJ8JLYrDJXtoOrV0NNub82yygvABIJEk68/edit#gid=0
+Скрипт для синхронизации таблицы из Google Sheets с таблицей в базе данных PostgreSQL
 
-# Инструкция
+### Пример данных в Google Sheets
 
-Необходимо установить requirements.txt
+№| заказ № | стоимость,$ |срок поставки
+------ |---------|-------------| ------
+1   | 2167    | 234         | 13.05.2022
+2   | 2564    | 346         | 14.05.2022
+3   | 2678    | 78          | 13.06.2022
+4   | 6776    | 890         | 19.05.2022
 
-И заполнить файл config.py данными о пользователе и базе данных в PostgreSQL
+При изменении кол-ва колонок требуется внести изменения в каждый запрос к базе данных в файле services/db.py и изменить число колонок NUMS_COLUMNS
+## Инструкция
+
+* Установить requirements.txt
+* Создать пользователя и базу данных в PostgreSQL
+* Создать сервисный аккаунт в Google Cloud и получить ключ credentials.json (https://habr.com/ru/post/488756/#avtorizaciya-cherez-servisnyy-akkaunt)
+* Добавить почту сервисного аккаунта в свою таблицу Google Sheets
+* Заполнить файл settings.py полученными данными.
 
 Запуск возможен в трех режимах:
 1. `python script.py`
@@ -33,3 +44,4 @@ kanal-service
 
 ## Requirements
 - Python 3.10
+- Google Sheets API v4
